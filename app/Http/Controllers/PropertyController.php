@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use JWTAuth;
-use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-
+use App\Http\Controllers\UserController;
 
 use App\User;
 use App\Property;
@@ -34,9 +33,27 @@ class PropertyController extends Controller
      */
     public function store(Request $request)
     {
+        
+        $validator = Validator::make($request->all(), [
+            'cref' => 'required|bail|string|size:20|unique:properties',
+            'address' => 'required|bail|string|max:255',
+            'population' => 'required|bail|string',
+            'province' => 'required|bail|string',
+            'cp' => 'required|bail|numeric|min:1000|max:51000',
+            'type' => 'in:Vivienda,Local comercial,Garaje',
+            'm2' => 'required|bail|numeric|min:1|max:5000',
+            'ac' => 'boolean',
+            'nroom' => 'numeric|min:1|max:20',
+            'nbath' => 'numeric|min:1|max:20'
+            ]); 
+            if($validator->fails()){
+                return response()->json($validator->errors()->toJson(), 400);
+            }
+            
+        $user_id = JWTAuth::parseToken()->authenticate();
         $property = Property::create([
             'cref' => $request->get('cref'),
-            'user_id' => $request->get('user_id'),
+            'user_id' => $user_id->id,
             'address' => $request->get('address'),
             'population' => $request->get('population'),
             'province' => $request->get('province'),

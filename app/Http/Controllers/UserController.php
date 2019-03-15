@@ -93,7 +93,12 @@ class UserController extends Controller
             'user' => auth()->user(),
         ]);
     } */
-
+/* 
+    public function me()
+    {
+        return response()->json(auth()->user());
+    }
+ */
 
     public function getUser()
     {
