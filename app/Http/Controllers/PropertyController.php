@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use App\Http\Requests\PropertiesStoreRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
+
 use App\User;
 use App\Property;
 
@@ -29,9 +32,8 @@ class PropertyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(PropertiesStoreRequest $request)
+    public function store(Request $request)
     {
-        
         $property = Property::create([
             'cref' => $request->get('cref'),
             'user_id' => $request->get('user_id'),
@@ -48,7 +50,7 @@ class PropertyController extends Controller
     
         $property->save();
         
-        return response()->json($property);
+        return response()->json($request);
     }
 
     /**
@@ -73,7 +75,7 @@ class PropertyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(PropertiesStoreRequest $request, $id)
+    public function update(Request $request, $id)
     {
         /* dd($request->all()); */
         $property = Property::findOrFail($id)->first()->fill($request->all())->save();    

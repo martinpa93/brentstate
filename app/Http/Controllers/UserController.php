@@ -53,10 +53,6 @@ class UserController extends Controller
 
     public function logout()
     {
-        $this->validate($request, [
-            'token' => 'required'
-        ]);
- 
         try {
            /*  auth()->logout(); */
             JWTAuth::invalidate(JWTAuth::getToken());
