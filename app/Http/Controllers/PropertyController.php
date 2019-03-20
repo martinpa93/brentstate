@@ -67,7 +67,7 @@ class PropertyController extends Controller
     
         $property->save();
         
-        return response()->json($request);
+        return response()->json($request,201);
     }
 
     /**
@@ -82,7 +82,7 @@ class PropertyController extends Controller
         $user = JWTAuth::parseToken()->authenticate();
         $property = $user->properties()->where('cref', $id)->get();
         
-        return response()->json($property);
+        return response()->json($property, 200);
     }
 
     /**
@@ -94,9 +94,8 @@ class PropertyController extends Controller
      */
     public function update(Request $request, $id)
     {
-        /* dd($request->all()); */
         $property = Property::findOrFail($id)->first()->fill($request->all())->save();    
-        return response()->json($property);
+        return response()->json($property, 200);
     }
 
     /**
@@ -109,6 +108,6 @@ class PropertyController extends Controller
     {
         $user = JWTAuth::parseToken()->authenticate();
         $property = $user->properties()->where('cref', $id)->delete();
-        return response()->json($property);
+        return response()->json($property, 200);
     }
 }

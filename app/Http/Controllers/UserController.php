@@ -31,7 +31,6 @@ class UserController extends Controller
         ]);
     
         $token = JWTAuth::fromUser($user);
-        dd($token);
         return response()->json(compact('user','token'),201);
     }
 
