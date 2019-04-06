@@ -16,7 +16,7 @@ class CreateRentersTable extends Migration
     public function up()
     {
         Schema::create('renters', function (Blueprint $table) {
-            $table->string('dni',9);
+            $table->string('dni',9)->unique();
             $table->integer('user_id')->unsigned();
             $table->string('name');
             $table->string('surname');
@@ -25,12 +25,12 @@ class CreateRentersTable extends Migration
             $table->string('population');
             $table->string('phone',30);
             $table->char('iban',27);
-            $table->string('job')->nullable;
-            $table->decimal('salary', 6, 2)->nullable;
+            $table->string('job')->nullable();
+            $table->decimal('salary', 6, 2)->nullable();
             $table->timestamps();
 
             $table->primary('dni');
-            $table->foreign('user_id')->references('id')->on('users'); 
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); 
         });
     }
 

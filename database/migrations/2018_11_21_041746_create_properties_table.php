@@ -14,15 +14,15 @@ class CreatePropertiesTable extends Migration
     public function up()
     {
         Schema::create('properties', function (Blueprint $table) {
+            $table->char('cref', 20)->unique();
             $table->integer('user_id')->unsigned();
-            $table->char('cref', 20);
             $table->string('address');
             $table->string('population');
             $table->string('province');
             $table->char('cp',5);
             $table->enum('type', ['Vivienda', 'Local comercial', 'Garage']);
             $table->unsignedInteger('m2');
-            $table->boolean('ac');
+            $table->boolean('ac')->nullable();
             $table->unsignedInteger('nroom');
             $table->unsignedInteger('nbath');
             $table->timestamps();

@@ -19,8 +19,8 @@ Route::group(['middleware' => ['api']], function () {
     Route::group(['middleware' => 'auth.jwt'], function () {
         Route::apiResources([
             'property' => 'PropertyController',
-            'renter' => 'PropertyController',
-            'contract' => 'PropertyController'
+            'renter' => 'RenterController',
+            'contract' => 'ContractController'
             ]);
             
         Route::get('logout', 'UserController@logout');

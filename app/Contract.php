@@ -6,15 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contract extends Model
 {
-    //
-
-    protected $table = "contracts";
     
-    public $keyType = 'string';
-    public $autoincrement = false;
-
     protected $fillable = ['property_id','renter_id','dstart','dend','iva','watertax'
                             ,"gastax",'electriciytax','communitytax'];
+    protected $hidden = ['created_at','updated_at'];
 
     public function user()
     {

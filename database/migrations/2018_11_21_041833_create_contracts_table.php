@@ -27,8 +27,8 @@ class CreateContractsTable extends Migration
             $table->decimal('communitytax', 6, 2)->nullable;
             $table->timestamps();
 
-            $table->foreign('property_id')->references('cref')->on('properties')->onDelete('cascade');
-            $table->foreign('renter_id')->references('dni')->on('renters')->onDelete('cascade');
+            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
+            $table->foreign('renter_id')->references('id')->on('renters')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users'); 
         });
     }

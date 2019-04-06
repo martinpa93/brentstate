@@ -6,15 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Renter extends Model
 {
-    //
-    protected $table = "renters";
-    protected $primaryKey = 'dni';
-    public $keyType = 'string';
-    public $autoincrement = false;
 
-    protected $fillable = ['dni','name','surname','dbirth','address','population'
-                            ,"phone",'creditcard','job','salary'];
-
+    protected $fillable = ['dni','user_id','name','surname','dbirth','address','population'
+                            ,"phone",'iban','job','salary'];
+    protected $hidden = ['created_at','updated_at'];
+    
     public function user()
     {
         return $this->belongsTo('App\User');

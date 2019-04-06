@@ -6,12 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Property extends Model
 {
-    //
-    protected $table = "properties";
-
-    protected $primaryKey = 'cref';
-
-
     protected $fillable = ['cref','user_id','address','population','province','cp','type'
                             ,"m2",'ac','nroom','nbath'];
     protected $hidden = ['created_at','updated_at'];
