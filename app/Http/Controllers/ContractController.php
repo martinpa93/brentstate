@@ -35,39 +35,40 @@ class ContractController extends Controller
     {
         
         $validator = Validator::make($request->all(), [
-            'cref' => 'required|bail|string|size:20|unique:properties',
-            'address' => 'required|bail|string|max:255',
-            'population' => 'required|bail|string',
-            'province' => 'required|bail|string',
-            'cp' => 'required|bail|numeric|min:1000|max:51000',
-            'type' => 'required|bail|in:Vivienda,Local comercial,Garaje',
-            'm2' => 'required|bail|numeric|min:1|max:5000',
-            'ac' => 'boolean',
-            'nroom' => 'required|numeric|min:1|max:20',
-            'nbath' => 'required|numeric|min:1|max:20'
+            'property_id' => 'required|string|size:20|exists:properties,cref',
+            'renter_id' => 'required|bail|string|size:9|exists:renters,dni',
+            'dstart' => 'required|bail|date|date_format:d-m-Y',
+            'dend' => 'required|bail|date|date_format:d-m-Y',
+            'iva' => 'required|bail|boolean',
+            'watertax' => 'required|bail|numeric|between:0.99,10000.99',
+            'gastax' => 'required|bail|numeric|between:0.99,10000.99',
+            'electricitytax' => 'required|bail|numeric|numeric|between:0.99,10000.99',
+            'communitytax' => 'required|bail|numeric|numeric|between:0.99,10000.99',
             ]); 
-            if($validator->fails()){
-                return response()->json($validator->errors()->toJson(), 400);
-            }
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
             
         $user_id = JWTAuth::parseToken()->authenticate();
-        $property = Property::create([
-            'cref' => $request->get('cref'),
+        $pipe = date("Y-m-d H:i:s", strtotime($request->get('dstart')));
+        $pipe2 = date("Y-m-d H:i:s", strtotime($request->get('dend')));
+        
+        $contract = Contract::firstOrCreate([
             'user_id' => $user_id->id,
-            'address' => $request->get('address'),
-            'population' => $request->get('population'),
-            'province' => $request->get('province'),
-            'cp' => $request->get('cp'),
-            'type' => $request->get('type'),
-            'm2' => $request->get('m2'),
-            'ac' => $request->get('ac'),
-            'nroom' => $request->get('nroom'),
-            'nbath' => $request->get('nbath'),
+            'property_id' => $request->get('property_id'),
+            'renter_id' => $request->get('renter_id'),
+            'dstart' => $pipe,
+            'dend' => $pipe2,
+            'iva' => $request->get('iva'),
+            'watertax' => $request->get('watertax'),
+            'gastax' => $request->get('gastax'),
+            'electricitytax' => $request->get('electricitytax'),
+            'communitytax' => $request->get('communitytax'),
         ]);
     
-        $property->save();
         
-        return response()->json($request,201);
+        return response()->json($contract,201);
+        /* return response()->json('Created succesfully',201); */
     }
 
     /**
@@ -76,14 +77,16 @@ class ContractController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id) 
+    /* id es el registro, solo muestra contratos del usuario
+    que envía el token  */
     {
         $user = JWTAuth::parseToken()->authenticate();
-        $property = $user->properties()->where('cref', $id)->get();
-        if($property->isEmpty()){
+        $contract = $user->contracts()->where('id', $id)->get();
+        if($contract->isEmpty()){
             return response()->json('',204);
         }
-        return response()->json($property, 200);
+        return response()->json($contract, 200);
     }
 
     /**
@@ -96,30 +99,27 @@ class ContractController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-        
-            'address' => 'required|bail|string|max:255',
-            'population' => 'required|bail|string',
-            'province' => 'required|bail|string',
-            'cp' => 'required|bail|numeric|min:1000|max:51000',
-            'type' => 'required|bail|in:Vivienda,Local comercial,Garaje',
-            'm2' => 'required|bail|numeric|min:1|max:5000',
-            'ac' => 'boolean',
-            'nroom' => 'required|numeric|min:1|max:20',
-            'nbath' => 'required|numeric|min:1|max:20'
+            'dstart' => 'required|bail|date|date_format:d-m-Y',
+            'dend' => 'required|bail|date|date_format:d-m-Y',
+            'iva' => 'required|bail|boolean',
+            'watertax' => 'required|bail|numeric|between:0.99,10000.99',
+            'gastax' => 'required|bail|numeric|between:0.99,10000.99',
+            'electricitytax' => 'required|bail|numeric|numeric|between:0.99,10000.99',
+            'communitytax' => 'required|bail|numeric|numeric|between:0.99,10000.99',
             ]); 
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
         }
 
 
-        $user_id = JWTAuth::parseToken()->authenticate();
-        $property=Property::where('cref',$id);
+        $user= JWTAuth::parseToken()->authenticate();
+        $contract=$user->contracts()->where('id', $id)->get();
 
-        if(!$property->exists())
+        if(!$contract->exists())
             return response()->json('', 204);
         else{
-            $property->update([
-                'user_id' => $user_id->id,
+            $contract->update([
+                'user_id' => $user->id,
                 'address' => $request->get('address'),
                 'population' => $request->get('population'),
                 'province' => $request->get('province'),
@@ -144,9 +144,9 @@ class ContractController extends Controller
     public function destroy($id)
     {
         $user = JWTAuth::parseToken()->authenticate();
-            $renter = $user->renters()->where('dni', $id);
-            if ($renter->exists()){
-                $renter->delete();
+            $contract = $user->contracts()->where('id', $id);
+            if ($contract->exists()){
+                $contract->delete();
                 return response()->json('Deleted succesfully', 205);
             }
             else return response()->json('This register dont exist', 400);
