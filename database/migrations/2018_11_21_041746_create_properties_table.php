@@ -20,7 +20,7 @@ class CreatePropertiesTable extends Migration
             $table->string('population');
             $table->string('province');
             $table->char('cp',5);
-            $table->enum('type', ['Vivienda', 'Local comercial', 'Garage']);
+            $table->enum('type', ['Vivienda', 'Local comercial', 'Garaje']);
             $table->unsignedInteger('m2');
             $table->boolean('ac')->nullable();
             $table->unsignedInteger('nroom');
