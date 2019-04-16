@@ -114,7 +114,7 @@ class PropertyController extends Controller
 
         $user_id = JWTAuth::parseToken()->authenticate();
         $property=Property::where('cref',$id);
-
+        dd($property);
         if(!$property->exists())
             return response()->json('', 204);
         else{
@@ -144,11 +144,11 @@ class PropertyController extends Controller
     public function destroy($id)
     {
         $user = JWTAuth::parseToken()->authenticate();
-            $renter = $user->renters()->where('dni', $id);
-            if ($renter->exists()){
-                $renter->delete();
-                return response()->json('Deleted succesfully', 205);
-            }
-            else return response()->json('This register dont exist', 400);
+        $property = $user->properties()->where('cref', $id);
+        if ($property->exists()){
+            $property->delete();
+            return response()->json('Deleted succesfully', 205);
+        }
+        else return response()->json('This register dont exist', 400);
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Contract extends Model
 {
     
-    protected $fillable = ['user_id','property_id','renter_id','dstart','dend','iva','watertax'
+    protected $fillable = ['id', 'user_id','property_id','renter_id','dstart','dend','iva','watertax'
                             ,'gastax','electricitytax','communitytax'];
     protected $hidden = ['created_at','updated_at'];
 

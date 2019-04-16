@@ -31,11 +31,11 @@ class RenterController extends Controller
             'dni' => 'required|bail|string|size:9|unique:renters',
             'name' => 'required|bail|string|min:2|max:15',
             'surname' => 'required|bail|string|min:2|max:20',
-            'dbirth' => 'date|date_format:d-m-Y',
+            'dbirth' => 'required|bail|date',
             'address' => 'required|bail|string|max:255',
             'population' => 'required|bail|string',
             'phone' => 'required|numeric|digits:9',
-            'iban' => 'required|numeric|digits:24',
+            'iban' => 'required|string|size:24',
             'job' => 'string|min:2|max:20',
             'salary' => 'numeric|between:100.99,10000.99'
             ]); 
@@ -92,11 +92,11 @@ class RenterController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|bail|string|min:2|max:15',
             'surname' => 'required|bail|string|min:2|max:20',
-            'dbirth' => 'date|date_format:d-m-Y',
+            'dbirth' => 'required|bail|date',
             'address' => 'required|bail|string|max:255',
             'population' => 'required|bail|string',
             'phone' => 'required|numeric|digits:9',
-            'iban' => 'required|numeric|digits:24',
+            'iban' => 'required|string|size:24',
             'job' => 'string|min:2|max:20',
             'salary' => 'numeric|between:100.99,10000.99'
             ]); 

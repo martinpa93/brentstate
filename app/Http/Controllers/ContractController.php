@@ -37,13 +37,13 @@ class ContractController extends Controller
         $validator = Validator::make($request->all(), [
             'property_id' => 'required|string|size:20|exists:properties,cref',
             'renter_id' => 'required|bail|string|size:9|exists:renters,dni',
-            'dstart' => 'required|bail|date|date_format:d-m-Y',
-            'dend' => 'required|bail|date|date_format:d-m-Y',
+            'dstart' => 'required|bail|date',
+            'dend' => 'required|bail|date',
             'iva' => 'required|bail|boolean',
-            'watertax' => 'required|bail|numeric|between:0.99,10000.99',
-            'gastax' => 'required|bail|numeric|between:0.99,10000.99',
-            'electricitytax' => 'required|bail|numeric|numeric|between:0.99,10000.99',
-            'communitytax' => 'required|bail|numeric|numeric|between:0.99,10000.99',
+            'watertax' => 'numeric|between:0.00,10000.00',
+            'gastax' => 'numeric|between:0.00,10000.00',
+            'electricitytax' => 'numeric|between:0.00,10000.00',
+            'communitytax' => 'numeric|between:0.00,10000.00',
             ]); 
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
@@ -99,38 +99,41 @@ class ContractController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'dstart' => 'required|bail|date|date_format:d-m-Y',
-            'dend' => 'required|bail|date|date_format:d-m-Y',
+            'property_id' => 'required|string|size:20|exists:properties,cref',
+            'renter_id' => 'required|bail|string|size:9|exists:renters,dni',
+            'dstart' => 'required|bail|date',
+            'dend' => 'required|bail|date',
             'iva' => 'required|bail|boolean',
-            'watertax' => 'required|bail|numeric|between:0.99,10000.99',
-            'gastax' => 'required|bail|numeric|between:0.99,10000.99',
-            'electricitytax' => 'required|bail|numeric|numeric|between:0.99,10000.99',
-            'communitytax' => 'required|bail|numeric|numeric|between:0.99,10000.99',
+            'watertax' => 'numeric|between:0.00,10000.00',
+            'gastax' => 'numeric|between:0.00,10000.00',
+            'electricitytax' => 'numeric|between:0.00,10000.00',
+            'communitytax' => 'numeric|between:0.00,10000.00',
             ]); 
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
         }
-
-
         $user= JWTAuth::parseToken()->authenticate();
+        $pipe = date("Y-m-d H:i:s", strtotime($request->get('dstart')));
+        $pipe2 = date("Y-m-d H:i:s", strtotime($request->get('dend')));
         $contract=$user->contracts()->where('id', $id)->get();
-
-        if(!$contract->exists())
+        if($contract->isEmpty())
             return response()->json('', 204);
         else{
+            $contract=Contract::where('id',$id);
             $contract->update([
                 'user_id' => $user->id,
-                'address' => $request->get('address'),
-                'population' => $request->get('population'),
-                'province' => $request->get('province'),
-                'cp' => $request->get('cp'),
-                'type' => $request->get('type'),
-                'm2' => $request->get('m2'),
-                'ac' => $request->get('ac'),
-                'nroom' => $request->get('nroom'),
-                'nbath' => $request->get('nbath'),
-            ]);
-
+                'property_id' => $request->get('property_id'),
+                'renter_id' => $request->get('renter_id'),
+                'dstart' => $pipe,
+                'dend' => $pipe2,
+                'iva' => $request->get('iva'),
+                'watertax' => $request->get('watertax'),
+                'gastax' => $request->get('gastax'),
+                'electricitytax' => $request->get('electricitytax'),
+                'communitytax' => $request->get('communitytax')
+                ]);
+                
+           
             return response()->json('Updated succesfully', 200);
             }
     }
