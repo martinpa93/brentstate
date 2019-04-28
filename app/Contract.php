@@ -18,11 +18,11 @@ class Contract extends Model
 
     public function properties()
     {
-        return $this->belongsTo("App\Property", "property_id");
+        return $this->belongsTo("App\Property", "property_id", "cref");
     }
     
     public function renters()
     {
-        return $this->hasMany("App\Rent", "renter_id");
+        return $this->belongsTo("App\Renter", "renter_id", "dni");
     }
 }

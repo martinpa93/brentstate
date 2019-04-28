@@ -12,6 +12,11 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */ 
+Route::get('foo', function () {
+     Artisan::call('notify:email', []);
+
+    //
+});
 Route::group(['middleware' => ['api']], function () {
     Route::post('register', 'UserController@register');
     Route::post('login', 'UserController@login');
