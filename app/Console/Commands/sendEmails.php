@@ -51,7 +51,7 @@ class sendEmails extends Command
 
             $property=$contract->properties;
             $renter=$contract->renters;
-
+            dd($renter);
             //Mail::to($reciever);
             Mail::to('rentstate93@gmail.com')
             ->send(new DEndContract($property,$renter,$contract));
