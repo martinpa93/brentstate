@@ -51,7 +51,7 @@ class PropertyController extends Controller
             }
             
         $user_id = JWTAuth::parseToken()->authenticate();
-        $property = Property::create([
+        $property = Property::firstOrCreate([
             'cref' => $request->get('cref'),
             'user_id' => $user_id->id,
             'address' => $request->get('address'),
@@ -112,14 +112,13 @@ class PropertyController extends Controller
         }
 
 
-        $user_id = JWTAuth::parseToken()->authenticate();
-        $property=Property::where('cref',$id);
-        dd($property);
+        $user = JWTAuth::parseToken()->authenticate();
+        $property=Property::where('cref',$id)->where('user_id', $user->id);
         if(!$property->exists())
             return response()->json('', 204);
         else{
             $property->update([
-                'user_id' => $user_id->id,
+                'user_id' => $user->id,
                 'address' => $request->get('address'),
                 'population' => $request->get('population'),
                 'province' => $request->get('province'),
@@ -131,7 +130,7 @@ class PropertyController extends Controller
                 'nbath' => $request->get('nbath'),
             ]);
 
-            return response()->json('Updated succesfully', 200);
+            return response()->json($request, 200);
             }
     }
 
@@ -147,8 +146,8 @@ class PropertyController extends Controller
         $property = $user->properties()->where('cref', $id);
         if ($property->exists()){
             $property->delete();
-            return response()->json('Deleted succesfully', 205);
+            return response()->json('The register '.$id.' have been deleted succesfully', 205);
         }
-        else return response()->json('This register dont exist', 400);
+        return response()->json('The register '.$id.' have not been found', 400);
     }
 }

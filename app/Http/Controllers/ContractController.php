@@ -116,9 +116,7 @@ class ContractController extends Controller
         $pipe = date("Y-m-d H:i:s", strtotime($request->get('dstart')));
         $pipe2 = date("Y-m-d H:i:s", strtotime($request->get('dend')));
         $contract=$user->contracts()->where('id', $id)->get();
-        if($contract->isEmpty())
-            return response()->json('', 204);
-        else{
+        if(!$contract->isEmpty()){
             $contract=Contract::where('id',$id);
             $contract->update([
                 'user_id' => $user->id,
@@ -132,16 +130,16 @@ class ContractController extends Controller
                 'electricitytax' => $request->get('electricitytax'),
                 'communitytax' => $request->get('communitytax')
                 ]);
-                
-           
-            return response()->json('Updated succesfully', 200);
-            }
+            $contract=Contract::where('id',$id)->get();
+            return response()->json($contract, 200);
+        }
+        return response()->json('', 204);
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
+        
+        /**
+         * Remove the specified resource from storage.
+         *
+         * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -150,8 +148,8 @@ class ContractController extends Controller
             $contract = $user->contracts()->where('id', $id);
             if ($contract->exists()){
                 $contract->delete();
-                return response()->json('Deleted succesfully', 205);
+                return response()->json('The register '.$id.' have been deleted succesfully', 205);
             }
-            else return response()->json('This register dont exist', 400);
+            else return response()->json('The register '.$id.' have not been found', 400);
     }
 }

@@ -45,7 +45,7 @@ class RenterController extends Controller
             
         $user_id = JWTAuth::parseToken()->authenticate();
         $pipe = date("Y-m-d H:i:s", strtotime($request->get('dbirth')));
-        $renter = Renter::create([
+        $renter = Renter::firstOrCreate([
             'dni' => $request->get('dni'),
             'user_id' => $user_id->id,
             'name' => $request->get('name'),
@@ -105,7 +105,7 @@ class RenterController extends Controller
         }
 
         $user_id = JWTAuth::parseToken()->authenticate();
-        $renter=Renter::where('dni',$id);
+        $renter=Renter::where('dni',$id)->where('user_id', $user_id->id);
         $pipe = date("Y-m-d H:i:s", strtotime($request->get('dbirth')));
 
         if(!$renter->exists())
@@ -123,7 +123,8 @@ class RenterController extends Controller
                 'job' => $request->get('job'),
                 'salary' => $request->get('salary')
             ]);
-            return response()->json('Updated succesfully', 200);
+            $renter=Renter::where('dni',$id)->get();
+            return response()->json($request, 200);
         }
     }
 
@@ -135,14 +136,12 @@ class RenterController extends Controller
      */
     public function destroy($id)
     {
-        if($user = JWTAuth::parseToken()->authenticate()){
-            $renter = $user->renters()->where('dni', $id);
-            if ($renter->exists()){
-                $renter->delete();
-                return response()->json('Deleted succesfully', 205);
-            }
-            else return response()->json('This register dont exist', 400);
+        $user = JWTAuth::parseToken()->authenticate();
+        $renter = $user->renters()->where('dni', $id);
+        if ($renter->exists()){
+            $renter->delete();
+            return response()->json('The register '.$id.' have been deleted succesfully', 205);
         }
-        else return response()->json('Deleted succesfully', 205);
+        return response()->json('The register '.$id.' have not been found', 400);
     }
 }
