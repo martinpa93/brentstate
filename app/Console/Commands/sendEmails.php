@@ -42,18 +42,16 @@ class sendEmails extends Command
      */
     public function handle()
     {
-        $today=Carbon::today()->addMonthsNoOverflow(1);
-        $contracts=\App\Contract::whereYear('dend','=',$today)->whereMonth('dend','<',$today)
-        ->get();
-        
+        $today=Carbon::today();
+        $range=Carbon::today()->addMonthsNoOverflow(2);
+        $contracts=\App\Contract::whereDate('dend','>=',$today)
+        ->whereDate('dend','<',$range)->get();
         $contracts->each(function ($contract) {
             $reciever=$contract->user->email;
 
             $property=$contract->properties;
             $renter=$contract->renters;
-            dd($renter);
-            //Mail::to($reciever);
-            Mail::to('rentstate93@gmail.com')
+            Mail::to($reciever)
             ->send(new DEndContract($property,$renter,$contract));
         });
        
