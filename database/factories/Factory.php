@@ -32,7 +32,7 @@ $factory->define(App\Property::class, function (Faker $faker) {
         'population' => $faker->state(), 
         'province' => $faker->state(),
         'cp' => $faker->numberBetween(1000,53000),
-        'type' => $faker->randomElement(['Vivienda', 'Local comercial', 'Garage']),
+        'type' => $faker->randomElement(['Vivienda', 'Local comercial', 'Garaje']),
         'm2' => $faker->numberBetween(0,200),
         'nroom' => $faker->numberBetween(0,10),
         'nbath' => $faker->numberBetween(0,3),
@@ -49,11 +49,11 @@ $factory->define(App\Renter::class, function (Faker $faker) {
         'surname' => $faker->lastName,
         'dbirth' => $faker->dateTime(),
         'address' => $faker->address,
+        'cp' => $faker->numberBetween(1000,53000),
         'population' => $faker->state(),
-        'phone' => $faker->phoneNumber,
+        'phone' => $faker->numberBetween(600000000,700000000),
         'iban' => $faker->iban('ES','ES',null),
         'job' => $faker->jobtitle,
-        'salary' => $faker->numberBetween(50,3000),
         'created_at' => $faker->dateTimeThisMonth()->format('Y-m-d H:i:s'),
         'updated_at' => $faker->dateTimeThisMonth()->format('Y-m-d H:i:s')
     ];
