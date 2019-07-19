@@ -6,12 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Renter extends Model
 {
-    protected $table='renters';
-    protected $primaryKey='dni';
-    protected $keyType='string';
-    public $incrementing = false;
-    protected $fillable = ['dni','user_id','name','surname','dbirth','address','population'
-                            ,"phone",'iban','job','salary'];
+    protected $fillable = ['dni','name','surname','dbirth','address','population'
+                            ,"phone",'iban','job'];
     protected $hidden = ['created_at','updated_at'];
     
     public function user()
@@ -19,7 +15,11 @@ class Renter extends Model
         return $this->belongsTo('App\User');
     }
 
-    
+    public function property()
+    {
+        return $this->belongsTo('App\Property');
+    }
+
     public function contracts()
     {
         return $this->hasMany("App\Contract","renter_id","dni");

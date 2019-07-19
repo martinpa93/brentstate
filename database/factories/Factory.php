@@ -34,8 +34,7 @@ $factory->define(App\Property::class, function (Faker $faker) {
         'cp' => $faker->numberBetween(1000,53000),
         'type' => $faker->randomElement(['Vivienda', 'Local comercial', 'Garage']),
         'm2' => $faker->numberBetween(0,200),
-        'ac' => $faker->boolean(),
-        'nroom' => $faker->numberBetween(0,5),
+        'nroom' => $faker->numberBetween(0,10),
         'nbath' => $faker->numberBetween(0,3),
         'created_at' => $faker->dateTimeThisMonth()->format('Y-m-d H:i:s'),
         'updated_at' => $faker->dateTimeThisMonth()->format('Y-m-d H:i:s')
@@ -62,17 +61,11 @@ $factory->define(App\Renter::class, function (Faker $faker) {
 
 $factory->define(App\Contract::class, function (Faker $faker) {
     return [
-        'id' => $faker->name,
         /* 'user_id'=>factory('App\User')->create()->id,
         'property_id'=>factory('App\Property')->create()->cref,
         'renter_id'=>factory('App\Renter')->create()->dni, */
-        'dstart' => str_random(10),
-        'dend' => str_random(10),
-        'iva' => $faker->boolean(),
-        'watertax' => $faker->numberBetween(0,45),
-        'gastax' => $faker->numberBetween(30,100),
-        'electricitytax' => $faker->numberBetween(10,30),
-        'communitytax' => $faker->numberBetween(30,70),
+        'dstart' => $faker->dateTime(),
+        'dend' => $faker->dateTime(),
         'created_at' => $faker->dateTimeThisMonth()->format('Y-m-d H:i:s'),
         'updated_at' => $faker->dateTimeThisMonth()->format('Y-m-d H:i:s')
     ];

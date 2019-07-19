@@ -14,20 +14,19 @@ class CreatePropertiesTable extends Migration
     public function up()
     {
         Schema::create('properties', function (Blueprint $table) {
-            $table->char('cref', 20)->unique();
+            $table->increments('id');
+            $table->string('cref', 20)->unique();
             $table->integer('user_id')->unsigned();
             $table->string('address');
             $table->string('population');
             $table->string('province');
-            $table->char('cp',5);
+            $table->string('cp');
             $table->enum('type', ['Vivienda', 'Local comercial', 'Garaje']);
             $table->unsignedInteger('m2');
-            $table->boolean('ac')->nullable();
             $table->unsignedInteger('nroom');
             $table->unsignedInteger('nbath');
             $table->timestamps();
 
-            $table->primary('cref');
             $table->foreign('user_id')->on('users')->references('id')->onDelete('cascade');
             ; 
         });

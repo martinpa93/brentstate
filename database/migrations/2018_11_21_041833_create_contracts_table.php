@@ -16,15 +16,10 @@ class CreateContractsTable extends Migration
         Schema::create('contracts', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->char('property_id',20);
-            $table->char('renter_id',9);
+            $table->string('property_id',20);
+            $table->string('renter_id',9);
             $table->date('dstart');
             $table->date('dend');
-            $table->boolean('iva');
-            $table->decimal('watertax', 6, 2)->nullable;
-            $table->decimal('gastax', 6, 2)->nullable;
-            $table->decimal('electricitytax', 6, 2)->nullable;
-            $table->decimal('communitytax', 6, 2)->nullable;
             $table->timestamps();
 
             $table->foreign('property_id')->references('cref')->on('properties')->onDelete('cascade');
