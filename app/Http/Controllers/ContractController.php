@@ -39,11 +39,6 @@ class ContractController extends Controller
             'renter_id' => 'required|bail|string|size:9|exists:renters,dni',
             'dstart' => 'required|bail|date',
             'dend' => 'required|bail|date',
-            'iva' => 'required|bail|boolean',
-            'watertax' => 'numeric|between:0.00,10000.00',
-            'gastax' => 'numeric|between:0.00,10000.00',
-            'electricitytax' => 'numeric|between:0.00,10000.00',
-            'communitytax' => 'numeric|between:0.00,10000.00',
             ]); 
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
@@ -52,23 +47,15 @@ class ContractController extends Controller
         $user_id = JWTAuth::parseToken()->authenticate();
         $pipe = date("Y-m-d H:i:s", strtotime($request->get('dstart')));
         $pipe2 = date("Y-m-d H:i:s", strtotime($request->get('dend')));
-        
         $contract = Contract::firstOrCreate([
             'user_id' => $user_id->id,
             'property_id' => $request->get('property_id'),
             'renter_id' => $request->get('renter_id'),
             'dstart' => $pipe,
-            'dend' => $pipe2,
-            'iva' => $request->get('iva'),
-            'watertax' => $request->get('watertax'),
-            'gastax' => $request->get('gastax'),
-            'electricitytax' => $request->get('electricitytax'),
-            'communitytax' => $request->get('communitytax'),
+            'dend' => $pipe2
         ]);
-    
         
         return response()->json($contract,201);
-        /* return response()->json('Created succesfully',201); */
     }
 
     /**
@@ -103,11 +90,6 @@ class ContractController extends Controller
             'renter_id' => 'required|bail|string|size:9|exists:renters,dni',
             'dstart' => 'required|bail|date',
             'dend' => 'required|bail|date',
-            'iva' => 'required|bail|boolean',
-            'watertax' => 'numeric|between:0.00,10000.00',
-            'gastax' => 'numeric|between:0.00,10000.00',
-            'electricitytax' => 'numeric|between:0.00,10000.00',
-            'communitytax' => 'numeric|between:0.00,10000.00',
             ]); 
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
@@ -123,12 +105,7 @@ class ContractController extends Controller
                 'property_id' => $request->get('property_id'),
                 'renter_id' => $request->get('renter_id'),
                 'dstart' => $pipe,
-                'dend' => $pipe2,
-                'iva' => $request->get('iva'),
-                'watertax' => $request->get('watertax'),
-                'gastax' => $request->get('gastax'),
-                'electricitytax' => $request->get('electricitytax'),
-                'communitytax' => $request->get('communitytax')
+                'dend' => $pipe2
                 ]);
             $contract=Contract::where('id',$id)->get();
             return response()->json($contract, 200);

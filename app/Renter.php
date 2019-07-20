@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Renter extends Model
 {
-    protected $fillable = ['dni','name','surname','dbirth','address','population'
+    protected $fillable = ['user_id','dni','name','surname','dbirth','address','cp','population'
                             ,"phone",'iban','job'];
     protected $hidden = ['created_at','updated_at'];
     

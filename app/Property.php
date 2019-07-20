@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Property extends Model
 {
-    protected $fillable = ['cref','address','population','province','cp','type'
+    protected $fillable = ['user_id','cref','address','population','province','cp','type'
                             ,"m2",'nroom','nbath'];
     protected $hidden = ['created_at','updated_at'];
 

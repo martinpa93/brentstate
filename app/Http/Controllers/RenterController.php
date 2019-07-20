@@ -33,11 +33,11 @@ class RenterController extends Controller
             'surname' => 'required|bail|string|min:2|max:20',
             'dbirth' => 'required|bail|date',
             'address' => 'required|bail|string|max:255',
+            'cp' => 'required|bail|numeric|min:1000|max:51000',
             'population' => 'required|bail|string',
             'phone' => 'required|numeric|digits:9',
             'iban' => 'required|string|size:24',
             'job' => 'string|min:2|max:20',
-            'salary' => 'numeric|between:100.99,10000.99'
             ]); 
             if($validator->fails()){
                 return response()->json($validator->errors()->toJson(), 400);
@@ -52,11 +52,11 @@ class RenterController extends Controller
             'surname' => $request->get('surname'),
             'dbirth' => $pipe,
             'address' => $request->get('address'),
+            'cp' => $request->get('address'),
             'population' => $request->get('population'),
             'phone' => $request->get('phone'),
             'iban' => $request->get('iban'),
-            'job' => $request->get('job'),
-            'salary' => $request->get('salary')
+            'job' => $request->get('job')
         ]);
         $renter->save();
         
@@ -94,11 +94,11 @@ class RenterController extends Controller
             'surname' => 'required|bail|string|min:2|max:20',
             'dbirth' => 'required|bail|date',
             'address' => 'required|bail|string|max:255',
+            'cp' => 'required|bail|numeric|min:1000|max:51000',
             'population' => 'required|bail|string',
             'phone' => 'required|numeric|digits:9',
             'iban' => 'required|string|size:24',
             'job' => 'string|min:2|max:20',
-            'salary' => 'numeric|between:100.99,10000.99'
             ]); 
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
@@ -117,11 +117,11 @@ class RenterController extends Controller
                 'surname' => $request->get('surname'),
                 'dbirth' => $pipe,
                 'address' => $request->get('address'),
+                'cp' => $request->get('cp'),
                 'population' => $request->get('population'),
                 'phone' => $request->get('phone'),
                 'iban' => $request->get('iban'),
                 'job' => $request->get('job'),
-                'salary' => $request->get('salary')
             ]);
             $renter=Renter::where('dni',$id)->get();
             return response()->json($request, 200);

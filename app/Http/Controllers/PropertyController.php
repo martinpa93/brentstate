@@ -42,7 +42,6 @@ class PropertyController extends Controller
             'cp' => 'required|bail|numeric|min:1000|max:51000',
             'type' => 'required|bail|in:Vivienda,Local comercial,Garaje',
             'm2' => 'required|bail|numeric|min:1|max:5000',
-            'ac' => 'boolean',
             'nroom' => 'required|numeric|min:1|max:20',
             'nbath' => 'required|numeric|min:1|max:20'
             ]); 
@@ -60,7 +59,6 @@ class PropertyController extends Controller
             'cp' => $request->get('cp'),
             'type' => $request->get('type'),
             'm2' => $request->get('m2'),
-            'ac' => $request->get('ac'),
             'nroom' => $request->get('nroom'),
             'nbath' => $request->get('nbath'),
         ]);
@@ -103,7 +101,6 @@ class PropertyController extends Controller
             'cp' => 'required|bail|numeric|min:1000|max:51000',
             'type' => 'required|bail|in:Vivienda,Local comercial,Garaje',
             'm2' => 'required|bail|numeric|min:1|max:5000',
-            'ac' => 'boolean',
             'nroom' => 'required|numeric|min:1|max:20',
             'nbath' => 'required|numeric|min:1|max:20'
             ]); 
@@ -125,7 +122,6 @@ class PropertyController extends Controller
                 'cp' => $request->get('cp'),
                 'type' => $request->get('type'),
                 'm2' => $request->get('m2'),
-                'ac' => $request->get('ac'),
                 'nroom' => $request->get('nroom'),
                 'nbath' => $request->get('nbath'),
             ]);
