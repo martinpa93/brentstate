@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,10 @@ Route::get('foo', function () {
 Route::group(['middleware' => ['api']], function () {
     Route::post('register', 'UserController@register');
     Route::post('login', 'UserController@login');
+    Route::get('/prueba', function()
+    {
+      
+    });
     
     Route::group(['middleware' => 'auth.jwt'], function () {
         Route::apiResources([
@@ -27,7 +32,7 @@ Route::group(['middleware' => ['api']], function () {
             'renter' => 'RenterController',
             'contract' => 'ContractController'
             ]);
-            
+        Route::post('upload', 'FileController@store');
         Route::get('logout', 'UserController@logout');
         Route::get('user', 'UserController@getUser');
     });   

@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use JWTAuth;
 use App\User;
 use App\Contract;
+use Carbon\Carbon;
 
 class ContractController extends Controller
 {
@@ -47,12 +48,18 @@ class ContractController extends Controller
         $user_id = JWTAuth::parseToken()->authenticate();
         $pipe = date("Y-m-d H:i:s", strtotime($request->get('dstart')));
         $pipe2 = date("Y-m-d H:i:s", strtotime($request->get('dend')));
+        $today=Carbon::today();
+        $boolean=false;
+        if($today >= $pipe && $today < $pipe2 ){
+            $boolean=true;
+        }
         $contract = Contract::firstOrCreate([
             'user_id' => $user_id->id,
             'property_id' => $request->get('property_id'),
             'renter_id' => $request->get('renter_id'),
             'dstart' => $pipe,
-            'dend' => $pipe2
+            'dend' => $pipe2,
+            'status'=> $boolean
         ]);
         
         return response()->json($contract,201);

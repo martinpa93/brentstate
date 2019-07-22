@@ -52,7 +52,7 @@ class RenterController extends Controller
             'surname' => $request->get('surname'),
             'dbirth' => $pipe,
             'address' => $request->get('address'),
-            'cp' => $request->get('address'),
+            'cp' => $request->get('cp'),
             'population' => $request->get('population'),
             'phone' => $request->get('phone'),
             'iban' => $request->get('iban'),

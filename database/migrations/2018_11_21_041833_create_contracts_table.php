@@ -20,6 +20,7 @@ class CreateContractsTable extends Migration
             $table->string('renter_id',9);
             $table->date('dstart');
             $table->date('dend');
+            $table->boolean('status');
             $table->timestamps();
 
             $table->foreign('property_id')->references('cref')->on('properties')->onDelete('cascade');

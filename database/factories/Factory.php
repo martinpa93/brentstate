@@ -60,12 +60,20 @@ $factory->define(App\Renter::class, function (Faker $faker) {
 });
 
 $factory->define(App\Contract::class, function (Faker $faker) {
+    $dstart = $faker->dateTime();
+    $dend = $faker->dateTime();
+    $today=Carbon::today();
+    $boolean=false;
+    if($today >= $dstart && $today < $dend ){
+        $boolean=true;
+    }
     return [
         /* 'user_id'=>factory('App\User')->create()->id,
         'property_id'=>factory('App\Property')->create()->cref,
         'renter_id'=>factory('App\Renter')->create()->dni, */
         'dstart' => $faker->dateTime(),
         'dend' => $faker->dateTime(),
+        'status' => $boolean,
         'created_at' => $faker->dateTimeThisMonth()->format('Y-m-d H:i:s'),
         'updated_at' => $faker->dateTimeThisMonth()->format('Y-m-d H:i:s')
     ];
