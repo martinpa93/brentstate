@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Contract;
 use App\Mail\DEndContract;
 
-class sendEmails extends Command
+class SendEmails extends Command
 {
     /**
      * The name and signature of the console command.

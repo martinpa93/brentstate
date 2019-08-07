@@ -5,11 +5,9 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Mail;
 use App\Contract;
-use App\Mail\DEndContract;
 
-class updateContractsStatus extends Command
+class UpdateContractsStatus extends Command
 {
     /**
      * The name and signature of the console command.
@@ -44,14 +42,15 @@ class updateContractsStatus extends Command
     {
         $today=Carbon::today();
         $contracts=\App\Contract::all();
-        dd($contracts);
-        $contracts->each(function ($contract) {
-            $reciever=$contract->user->email;
-            $property=$contract->properties;
-            $renter=$contract->renters;
 
-            Mail::to($reciever)
-            ->send(new DEndContract($property,$renter,$contract));
+        $contracts->each(function ($contract) use ($today) {
+            $pipe = $contract->dstart;
+            $pipe2 = $contract->dend;
+
+            if ($today >= $pipe && $today < $pipe2) {
+                $contract->status = true;
+            } else $contract->status = false;
+            $contract->save();
         });
        
     }
