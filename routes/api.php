@@ -32,6 +32,7 @@ Route::group(['middleware' => ['api']], function () {
             'renter' => 'RenterController',
             'contract' => 'ContractController'
             ]);
+        Route::get('contractsAvaliable', 'ContractController@indexByStatus');
         Route::post('upload', 'FileController@store');
         Route::get('logout', 'UserController@logout');
         Route::get('user', 'UserController@getUser');

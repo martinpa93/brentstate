@@ -26,6 +26,13 @@ class ContractController extends Controller
         return response()->json($contracts, 200);
     }
 
+    public function indexBystatus()
+    {   
+        $user = JWTAuth::parseToken()->authenticate();
+        $contracts = $user->contracts->unique('property_id')->where('status', '=', true);
+        return response()->json($contracts, 200);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -44,17 +51,26 @@ class ContractController extends Controller
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
         }
-            
-        $user_id = JWTAuth::parseToken()->authenticate();
+
+        $user = JWTAuth::parseToken()->authenticate();
+        $contracts = $user->contracts->where('property_id', $request->get('property_id'));
+        $checkDates = false;
+        $contracts->each(function ($item, $key)  use ($request, &$checkDates) {
+            $pipe = date("Y-m-d H:i:s", strtotime($request->get('dstart')));
+            $pipe2 = date("Y-m-d H:i:s", strtotime($request->get('dend')));
+            if(($item->dstart <= $pipe) &&  ($pipe2 >= $item->dend)) $checkDates = true;
+        });
+        if($checkDates) return response()->json('El rango de fechas es incorrecto', 400);
+        
         $pipe = date("Y-m-d H:i:s", strtotime($request->get('dstart')));
         $pipe2 = date("Y-m-d H:i:s", strtotime($request->get('dend')));
         $today=Carbon::today();
         $boolean=false;
-        if($today >= $pipe && $today < $pipe2 ){
-            $boolean=true;
+        if($today >= $pipe && $today < $pipe2 ){ 
+            $boolean=true;    
         }
         $contract = Contract::firstOrCreate([
-            'user_id' => $user_id->id,
+            'user_id' => $user->id,
             'property_id' => $request->get('property_id'),
             'renter_id' => $request->get('renter_id'),
             'dstart' => $pipe,
@@ -101,10 +117,24 @@ class ContractController extends Controller
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
         }
+
         $user= JWTAuth::parseToken()->authenticate();
+        $contracts = $user->contracts->where('property_id', $request->get('property_id'));
+        $checkDates = false;
+        $contracts->each(function ($item, $key)  use ($request, &$checkDates) {
+            $pipe = date("Y-m-d H:i:s", strtotime($request->get('dstart')));
+            $pipe2 = date("Y-m-d H:i:s", strtotime($request->get('dend')));
+            if(($item->dstart <= $pipe) &&  ($pipe2 >= $item->dend)) $checkDates = true;
+        });
+        if($checkDates) return response()->json('El rango de fechas es incorrecto', 400);
+
         $pipe = date("Y-m-d H:i:s", strtotime($request->get('dstart')));
         $pipe2 = date("Y-m-d H:i:s", strtotime($request->get('dend')));
         $contract=$user->contracts()->where('id', $id)->get();
+        $boolean=false;
+        if($today >= $pipe && $today < $pipe2 ){
+            $boolean=true;
+        }
         if(!$contract->isEmpty()){
             $contract=Contract::where('id',$id);
             $contract->update([
@@ -112,7 +142,8 @@ class ContractController extends Controller
                 'property_id' => $request->get('property_id'),
                 'renter_id' => $request->get('renter_id'),
                 'dstart' => $pipe,
-                'dend' => $pipe2
+                'dend' => $pipe2,
+                'status'=> $boolean
                 ]);
             $contract=Contract::where('id',$id)->get();
             return response()->json($contract, 200);

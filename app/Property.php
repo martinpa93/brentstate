@@ -14,12 +14,6 @@ class Property extends Model
     {
         return $this->belongsTo("App\User");
     }
-
-    public function renter()
-    {
-        return $this->belongsTo("App\Renter");
-    }
-
     
     public function contracts()
     {

@@ -25,7 +25,7 @@ class CreateContractsTable extends Migration
 
             $table->foreign('property_id')->references('cref')->on('properties')->onDelete('cascade');
             $table->foreign('renter_id')->references('dni')->on('renters')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users'); 
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); 
         });
     }
 
