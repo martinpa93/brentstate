@@ -66,6 +66,7 @@ class ContractController extends Controller
         $pipe2 = date("Y-m-d H:i:s", strtotime($request->get('dend')));
         $today=Carbon::today();
         $boolean=false;
+        
         if($today >= $pipe && $today < $pipe2 ){ 
             $boolean=true;    
         }
@@ -130,8 +131,10 @@ class ContractController extends Controller
 
         $pipe = date("Y-m-d H:i:s", strtotime($request->get('dstart')));
         $pipe2 = date("Y-m-d H:i:s", strtotime($request->get('dend')));
+        $today=Carbon::today();
         $contract=$user->contracts()->where('id', $id)->get();
         $boolean=false;
+
         if($today >= $pipe && $today < $pipe2 ){
             $boolean=true;
         }
