@@ -32,16 +32,14 @@ class ContractController extends Controller
         $user = JWTAuth::parseToken()->authenticate();
         $contracts = $user->contracts->where('status', '=', true)->unique('property_id')->pluck('property_id');
         $properties = Property::all();
-       // dd($contracts);
-        $properties = $properties->filter(function ($item, $key) use ($contracts) {
+        $properties = $properties->filter(function ($item) use ($contracts) {
             $check = true;
-            $contracts->each(function ($prop) use (&$item, &$key, &$check) {
+            $contracts->each(function ($prop) use (&$item, &$check) {
                 if ( $item->cref === $prop) $check = false; 
             });
             return $check;
         });
-        $properties = $properties->pluck('address');
-        
+        $properties = $properties->flatten();
         return response()->json($properties , 200);
     }
 
