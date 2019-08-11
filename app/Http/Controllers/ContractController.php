@@ -133,9 +133,11 @@ class ContractController extends Controller
         $contracts = $user->contracts->where('property_id', $request->get('property_id'));
         $checkDates = false;
         $contracts->each(function ($item, $key)  use ($request, &$checkDates) {
-            $pipe = date("Y-m-d H:i:s", strtotime($request->get('dstart')));
-            $pipe2 = date("Y-m-d H:i:s", strtotime($request->get('dend')));
-            if(($item->dstart <= $pipe) &&  ($pipe2 >= $item->dend)) $checkDates = true;
+            if($request->id !== $item->id) {
+                $pipe = date("Y-m-d H:i:s", strtotime($request->get('dstart')));
+                $pipe2 = date("Y-m-d H:i:s", strtotime($request->get('dend')));
+                if(($item->dstart <= $pipe) &&  ($pipe2 >= $item->dend)) $checkDates = true;
+            }
         });
         if($checkDates) return response()->json('El rango de fechas es incorrecto', 400);
 
