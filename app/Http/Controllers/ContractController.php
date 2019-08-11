@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 
 use JWTAuth;
 use App\User;
+use App\Property;
 use App\Contract;
 use Carbon\Carbon;
 
@@ -29,8 +30,19 @@ class ContractController extends Controller
     public function indexBystatus()
     {   
         $user = JWTAuth::parseToken()->authenticate();
-        $contracts = $user->contracts->unique('property_id')->where('status', '=', true);
-        return response()->json($contracts, 200);
+        $contracts = $user->contracts->where('status', '=', true)->unique('property_id')->pluck('property_id');
+        $properties = Property::all();
+       // dd($contracts);
+        $properties = $properties->filter(function ($item, $key) use ($contracts) {
+            $check = true;
+            $contracts->each(function ($prop) use (&$item, &$key, &$check) {
+                if ( $item->cref === $prop) $check = false; 
+            });
+            return $check;
+        });
+        $properties = $properties->pluck('address');
+        
+        return response()->json($properties , 200);
     }
 
     /**
