@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\UserController;
 
 use JWTAuth;
 use App\User;
 use App\Property;
+use App\Renter;
 use App\Contract;
 use Carbon\Carbon;
 
@@ -24,6 +26,15 @@ class ContractController extends Controller
     {   
         $user = JWTAuth::parseToken()->authenticate();
         $contracts = $user->contracts;
+        $contracts->map(function($item, $key) use ($contracts) {
+            $properties = DB::table('properties')->where('cref','=',$item->property_id)->select('cref','address')->get();
+            $renters = DB::table('renters')->where('dni','=',$item->renter_id)->select('dni','name','surname')->get();
+            $contracts[$key]->address = $properties[0]->address;
+            $contracts[$key]->dni = $renters[0]->dni;
+            $contracts[$key]->name = $renters[0]->name;
+            $contracts[$key]->surname = $renters[0]->surname;
+
+        });
         return response()->json($contracts, 200);
     }
 
