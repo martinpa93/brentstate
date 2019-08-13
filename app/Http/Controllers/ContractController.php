@@ -30,7 +30,6 @@ class ContractController extends Controller
             $properties = DB::table('properties')->where('cref','=',$item->property_id)->select('cref','address')->get();
             $renters = DB::table('renters')->where('dni','=',$item->renter_id)->select('dni','name','surname')->get();
             $contracts[$key]->address = $properties[0]->address;
-            $contracts[$key]->dni = $renters[0]->dni;
             $contracts[$key]->name = $renters[0]->name;
             $contracts[$key]->surname = $renters[0]->surname;
 
