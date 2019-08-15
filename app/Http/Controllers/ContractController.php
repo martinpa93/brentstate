@@ -129,13 +129,14 @@ class ContractController extends Controller
         $contracts = $user->contracts->where('property_id', $request->get('property_id'));
         $overlap = false;
         $contracts->each(function ($item, $key)  use ($id, $request, &$overlap) {
-            if($id === $item->id){
-                $pipe = date("Y-m-d H:i:s", strtotime($request->get('dstart')));
-                $pipe2 = date("Y-m-d H:i:s", strtotime($request->get('dend')));
-                if(!(($item->dstart <= $pipe && $item->dstart <= $pipe2 && $item->dend <= $pipe && $item->dend <= $pipe2) ||
-                ($pipe <= $item->dstart && $pipe <= $item->dend && $pipe2 <= $item->dstart && $pipe2 <= $item->dend)))
-                    $overlap = true;
+            if((int)$id === $item->id) {
+                return true;
             }
+            $pipe = date("Y-m-d H:i:s", strtotime($request->get('dstart')));
+            $pipe2 = date("Y-m-d H:i:s", strtotime($request->get('dend')));
+            if(!(($item->dstart <= $pipe && $item->dstart <= $pipe2 && $item->dend <= $pipe && $item->dend <= $pipe2) ||
+            ($pipe <= $item->dstart && $pipe <= $item->dend && $pipe2 <= $item->dstart && $pipe2 <= $item->dend)))
+                $overlap = true;
         });
         if($overlap) return response()->json('El rango de fechas es incorrecto', 400);
 
