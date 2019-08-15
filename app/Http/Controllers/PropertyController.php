@@ -25,6 +25,24 @@ class PropertyController extends Controller
         return response()->json($properties, 200);
     }
 
+    public function indexBystatus()
+    {   
+        $user = JWTAuth::parseToken()->authenticate();
+        $contracts = $user->contracts->where('status', '=', true)->unique('property_id')->pluck('property_id');
+        $contracts = $user->contracts;
+        dd($contracts);
+        $properties = Property::all();
+        $properties = $properties->filter(function ($item) use ($contracts) {
+            $check = true;
+            $contracts->each(function ($prop) use (&$item, &$check) {
+                if ( $item->cref === $prop) $check = false; 
+            });
+            return $check;
+        });
+        $properties = $properties->flatten();
+        return response()->json($properties , 200);
+    }
+
     /**
      * Store a newly created resource in storage.
      *

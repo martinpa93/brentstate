@@ -37,22 +37,6 @@ class ContractController extends Controller
         return response()->json($contracts, 200);
     }
 
-    public function indexBystatus()
-    {   
-        $user = JWTAuth::parseToken()->authenticate();
-        $contracts = $user->contracts->where('status', '=', true)->unique('property_id')->pluck('property_id');
-        $properties = Property::all();
-        $properties = $properties->filter(function ($item) use ($contracts) {
-            $check = true;
-            $contracts->each(function ($prop) use (&$item, &$check) {
-                if ( $item->cref === $prop) $check = false; 
-            });
-            return $check;
-        });
-        $properties = $properties->flatten();
-        return response()->json($properties , 200);
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -74,14 +58,16 @@ class ContractController extends Controller
 
         $user = JWTAuth::parseToken()->authenticate();
         $contracts = $user->contracts->where('property_id', $request->get('property_id'));
-        $checkDates = false;
-        $contracts->each(function ($item, $key)  use ($request, &$checkDates) {
+        $overlap = false;
+        $contracts->each(function ($item, $key)  use ($request, &$overlap) {
             $pipe = date("Y-m-d H:i:s", strtotime($request->get('dstart')));
             $pipe2 = date("Y-m-d H:i:s", strtotime($request->get('dend')));
-            if(($item->dstart <= $pipe) &&  ($pipe2 >= $item->dend)) $checkDates = true;
+            if(!(($item->dstart <= $pipe && $item->dstart <= $pipe2 && $item->dend <= $pipe && $item->dend <= $pipe2) ||
+              ($pipe <= $item->dstart && $pipe <= $item->dend && $pipe2 <= $item->dstart && $pipe2 <= $item->dend)))
+                $overlap = true;
         });
-        if($checkDates) return response()->json('El rango de fechas es incorrecto', 400);
-        
+        if ($overlap) return response()->json('El rango de fechas es incorrecto', 400);
+
         $pipe = date("Y-m-d H:i:s", strtotime($request->get('dstart')));
         $pipe2 = date("Y-m-d H:i:s", strtotime($request->get('dend')));
         $today=Carbon::today();
@@ -141,15 +127,17 @@ class ContractController extends Controller
 
         $user= JWTAuth::parseToken()->authenticate();
         $contracts = $user->contracts->where('property_id', $request->get('property_id'));
-        $checkDates = false;
-        $contracts->each(function ($item, $key)  use ($request, &$checkDates) {
-            if($request->id !== $item->id) {
+        $overlap = false;
+        $contracts->each(function ($item, $key)  use ($id, $request, &$overlap) {
+            if($id === $item->id){
                 $pipe = date("Y-m-d H:i:s", strtotime($request->get('dstart')));
                 $pipe2 = date("Y-m-d H:i:s", strtotime($request->get('dend')));
-                if(($item->dstart <= $pipe) &&  ($pipe2 >= $item->dend)) $checkDates = true;
+                if(!(($item->dstart <= $pipe && $item->dstart <= $pipe2 && $item->dend <= $pipe && $item->dend <= $pipe2) ||
+                ($pipe <= $item->dstart && $pipe <= $item->dend && $pipe2 <= $item->dstart && $pipe2 <= $item->dend)))
+                    $overlap = true;
             }
         });
-        if($checkDates) return response()->json('El rango de fechas es incorrecto', 400);
+        if($overlap) return response()->json('El rango de fechas es incorrecto', 400);
 
         $pipe = date("Y-m-d H:i:s", strtotime($request->get('dstart')));
         $pipe2 = date("Y-m-d H:i:s", strtotime($request->get('dend')));
