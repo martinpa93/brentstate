@@ -28,23 +28,29 @@ class PropertyController extends Controller
     public function indexBystatus()
     {   
         $user = JWTAuth::parseToken()->authenticate();
-        $contracts = $user->contracts->where('status', '=', true)->unique('property_id')->pluck('property_id');
-        $contracts = $user->contracts;
-        dd($contracts);
-        $properties = Property::all();
-        $properties = $properties->filter(function ($item) use ($contracts) {
-            $check = true;
-            $contracts->each(function ($prop) use (&$item, &$check) {
-                if ( $item->cref === $prop) $check = false; 
+        $contracts = $user->contracts->where('status', '=', true);
+        $properties = $user->properties;
+        $properties = $properties->map(function ($item,$key) use ($contracts) {
+            $a = false;
+            //dd($item->cref);
+             
+            $contracts->each(function ($prop) use ($item, $key, &$a) {
+             // if($item->cref == 'H3TDTnMyU2xHNg0g40Un') dd($key);
+                if ( $item->cref === $prop->property_id) {
+                    $item->status = true;
+                    $a=true;
+                    return false;
+                } 
             });
-            return $check;
+            if ($a === false) $item->status = false;
+            return $item;
         });
-        $properties = $properties->flatten();
         return response()->json($properties , 200);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly creat
+     * ed resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
