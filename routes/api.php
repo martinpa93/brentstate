@@ -21,10 +21,6 @@ Route::get('foo', function () {
 Route::group(['middleware' => ['api']], function () {
     Route::post('register', 'UserController@register');
     Route::post('login', 'UserController@login');
-    Route::get('/prueba', function()
-    {
-      
-    });
     
     Route::group(['middleware' => 'auth.jwt'], function () {
         Route::apiResources([
@@ -34,6 +30,8 @@ Route::group(['middleware' => ['api']], function () {
             ]);
         Route::get('propertiesAvaliable', 'PropertyController@indexByStatus');
         Route::post('upload', 'FileController@store');
+        Route::get('notification', 'NotificationController@index');
+
         Route::get('logout', 'UserController@logout');
         Route::get('user', 'UserController@getUser');
     });   

@@ -35,7 +35,6 @@ class PropertyController extends Controller
             //dd($item->cref);
              
             $contracts->each(function ($prop) use ($item, $key, &$a) {
-             // if($item->cref == 'H3TDTnMyU2xHNg0g40Un') dd($key);
                 if ( $item->cref === $prop->property_id) {
                     $item->status = true;
                     $a=true;

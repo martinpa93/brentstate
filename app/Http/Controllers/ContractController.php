@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\UserController;
 
 use JWTAuth;
 use App\User;
@@ -32,7 +31,6 @@ class ContractController extends Controller
             $contracts[$key]->address = $properties[0]->address;
             $contracts[$key]->name = $renters[0]->name;
             $contracts[$key]->surname = $renters[0]->surname;
-
         });
         return response()->json($contracts, 200);
     }

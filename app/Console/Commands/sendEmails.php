@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use App\Contract;
+use App\Notification;
 use App\Mail\DEndContract;
 
 class SendEmails extends Command
@@ -23,7 +24,7 @@ class SendEmails extends Command
      *
      * @var string
      */
-    protected $description = 'Reminder end date of contracts';
+    protected $description = 'Reminder end date of contracts and insert on DB';
 
     /**
      * Create a new command instance.
@@ -46,9 +47,20 @@ class SendEmails extends Command
         $range=Carbon::today()->addMonthsNoOverflow(2);
         $contracts=\App\Contract::whereDate('dend','>=',$today)
         ->whereDate('dend','<',$range)->get();
-        $contracts->each(function ($contract) {
-            $reciever=$contract->user->email;
+        $contracts->each(function ($contract)
+        {
+            //create
+            Notification::firstOrCreate([
+                'user_id' => $contract->user->id,
+                'contract_id' => $contract->id,
+                'priority' => 'high' ,
+                'event' => 'FIN DE CONTRATO',
+                'description' => 'Fin de contrato para la propiedad '.$contract->properties->address.' el '.$contract->dend
+            ]);
+            
 
+            $reciever=$contract->user->email;
+            
             $property=$contract->properties;
             $renter=$contract->renters;
             Mail::to($reciever)
