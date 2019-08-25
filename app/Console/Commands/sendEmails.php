@@ -50,7 +50,7 @@ class SendEmails extends Command
         $contracts->each(function ($contract)
         {
             //create
-            Notification::firstOrCreate([
+            Notification::create([
                 'user_id' => $contract->user->id,
                 'contract_id' => $contract->id,
                 'priority' => 'high' ,
