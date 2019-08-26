@@ -55,7 +55,8 @@ class SendEmails extends Command
                 'contract_id' => $contract->id,
                 'priority' => 'high' ,
                 'event' => 'FIN DE CONTRATO',
-                'description' => 'Fin de contrato para la propiedad '.$contract->properties->address.' el '.$contract->dend
+                'description' => $contract->properties->address,
+                'description2' => $contract->dend
             ]);
             
 

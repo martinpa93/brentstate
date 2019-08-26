@@ -23,7 +23,9 @@ class Notifications extends Migration
             $table->integer('contract_id')->unsigned()->nullable();
             $table->enum('priority', ['low', 'medium ', 'high']);
             $table->string('event');
-            $table->string('description');
+            $table->string('description')->nullable();
+            $table->string('description2')->nullable();
+            $table->string('description3')->nullable();
             $table->timestamps();
 
             $table->foreign('contract_id')->references('id')->on('contracts');
